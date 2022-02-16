@@ -20,7 +20,19 @@ pd.set_option('display.max_columns', None)
 
 
 # downloading the tickers
-indices = pd.read_html('https://finance.yahoo.com/world-indices')[0]
+
+
+try:
+    indices = pd.read_html('https://finance.yahoo.com/world-indices')[0]
+except: #if the website were to change
+    indices = pd.DataFrame(data = np.array([    ['^GSPC', 'S&P 500'],
+                                       ['^DJI', 'Dow 30'],
+                                       ['^IXIC', 'Nasdaq'],
+                                       ['^NYA', 'NYSE COMPOSITE (DJ)']
+                                           ]),
+                           columns = ['Symbol', 'Name']
+                                       )
+    
 indices.info()
 indices = indices[['Symbol','Name']].astype('string')
 indices
@@ -83,5 +95,7 @@ tot_rtn = round(tot_rtn, 4)
 fig, ax = plt.subplots(figsize = (12, 6))
 ax.barh(list(tot_rtn.columns), list(tot_rtn.iloc[0]))
 ax.set_title('total returns in % since inception')
+
+
 
 
